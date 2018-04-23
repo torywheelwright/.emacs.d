@@ -13,7 +13,9 @@
 			   dockerfile-mode
 			   editorconfig
 			   elpy
+			   flycheck
 			   helm
+			   jedi
 			   json-mode
 			   monokai-theme
 			   rainbow-delimiters
@@ -65,6 +67,7 @@
 (global-set-key (kbd "C-x f") 'helm-find-files)
 
 ;; editor stuff
+(add-hook 'after-init-hook #'global-flycheck-mode)
 (defun smarter-move-beginning-of-line (arg)
   (interactive "^p")
   (setq arg (or arg 1))
@@ -150,6 +153,8 @@
 (add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace 1)))
 
 ;; c/++ stuff
+(add-hook 'c++-mode-hook
+    (lambda () (setq flycheck-clang-language-standard "c++14")))
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (c-set-offset 'innamespace 0) ;; Don't indent namespaces
 (defadvice c-lineup-arglist (around my activate)
@@ -168,6 +173,10 @@ http://stackoverflow.com/a/23553882"
 
 ;; python stuff
 (elpy-enable)
+(delete `elpy-module-highlight-indentation elpy-modules)
+;;'(flycheck-python-pylint-executable "pylint")
+;;(flycheck-add-next-checker 'python-flake8 'python-pylint)
+(setq flycheck-python-pylint-executable "python3")
 
 ;;; init.el ends here
 (custom-set-variables

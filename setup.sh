@@ -1,1 +1,1 @@
-pip3 install jedi flake8 autopep8 yapf
+pip3 install jedi flake8 pylint autopep8 yapf
