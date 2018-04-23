@@ -12,7 +12,6 @@
 (defvar package-packages '(bracketed-paste
 			   dockerfile-mode
 			   editorconfig
-			   elpy
 			   flycheck
 			   helm
 			   jedi
@@ -172,11 +171,11 @@ http://stackoverflow.com/a/23553882"
       ad-do-it)))                   ; default behavior)
 
 ;; python stuff
-(elpy-enable)
-(delete `elpy-module-highlight-indentation elpy-modules)
-;;'(flycheck-python-pylint-executable "pylint")
-;;(flycheck-add-next-checker 'python-flake8 'python-pylint)
-(setq flycheck-python-pylint-executable "python3")
+(setq flycheck-python-pylint3-executable "python3")
+(setq flycheck-python-flake8-executable "python3")
+(flycheck-add-next-checker 'python-flake8 'python-pylint)
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
 
 ;;; init.el ends here
 (custom-set-variables
