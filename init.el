@@ -171,9 +171,11 @@ http://stackoverflow.com/a/23553882"
       ad-do-it)))                   ; default behavior)
 
 ;; python stuff
-(setq flycheck-python-pylint3-executable "python3")
+(setq flycheck-python-pylint-executable "python3")
 (setq flycheck-python-flake8-executable "python3")
-(flycheck-add-next-checker 'python-flake8 'python-pylint)
+(add-hook 'python-mode-hook (lambda ()
+			      (setq flycheck-checker 'python-flake8)
+			      (flycheck-add-next-checker 'python-flake8 'python-pylint)))
 (add-hook 'python-mode-hook 'jedi:setup)
 (setq jedi:complete-on-dot t)
 
