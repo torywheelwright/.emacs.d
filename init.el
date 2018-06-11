@@ -72,6 +72,9 @@
   :hook   (python-mode . 'jedi:setup)
   :config (setq jedi:complete-on-dot t))
 
+(use-package linum
+  :config (global-linum-mode t)
+          (setq linum-format "%3d| "))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -96,22 +99,19 @@
 (load-theme 'indoors t)
 
 ;; ui stuff
+
+;; don't show startup screen in gui mode
 (setq inhibit-startup-screen t)
+;; show only column numbers along the bottom
+(column-number-mode 1)
 (line-number-mode 0)
-(column-number-mode 0)
-(setq mode-line-format
-      (list '(vc-mode vc-mode)
-	    ":"
-	    mode-line-buffer-identification
-	    " "
-	    mode-line-position
-	    " "
-	    mode-line-modes))
-(setq linum-format "%3d| ")
-(global-linum-mode t)
+;; make "yes/no" questions respond to "y/n"
 (defalias 'yes-or-no-p 'y-or-n-p)
+;; hide tool bar
 (if (functionp 'tool-bar-mode) (tool-bar-mode 0))
+;; hide menu bar
 (menu-bar-mode 0)
+;; can't remember what this does...i think it has to do with multiple frames
 (add-hook 'server-switch-hook
   (lambda nil
     (let ((server-buf (current-buffer)))
@@ -226,7 +226,7 @@ http://stackoverflow.com/a/23553882"
 ;; company mode
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; this should probably be cleaned up to not use mode hooks to manupilate company-backends
+;; this should probably be cleaned up to not use mode hooks to manipulate company-backends
 
 (add-hook 'after-init-hook 'global-company-mode)
 (setq company-idle-delay 0)
