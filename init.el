@@ -33,8 +33,11 @@
   :config (bracketed-paste-enable))
 
 (use-package company
+  :ensure   t
   :diminish company-mode
-  :ensure t)
+  :config   (global-company-mode)
+  :custom   ((company-idle-delay 0)
+              (company-tooltip-align-annotations t)))
 
 (use-package diminish
   :ensure t)
@@ -46,16 +49,16 @@
 
 (use-package flycheck
   :ensure t
-  :config (setq flycheck-clang-args (quote ("-std=c++17")))
-          (setq flycheck-python-pylint-executable "python3")
-          (setq flycheck-python-flake8-executable "python3")
-          (setq flycheck-checker 'python-flake8)
-          (flycheck-add-next-checker 'python-flake8 'python-pylint)
-          (global-flycheck-mode))
+  :config (flycheck-add-next-checker 'python-flake8 'python-pylint)
+          (global-flycheck-mode)
+  :custom ((flycheck-clang-args (quote ("-std=c++17")))
+            (flycheck-python-pylint-executable "python3")
+            (flycheck-python-flake8-executable "python3")
+            (flycheck-checker 'python-flake8)))
 
 (use-package flycheck-credo
   :init   (add-hook 'flycheck-mode-hook #'flycheck-credo-setup)
-  :config (setq flycheck-elixir-credo-strict t))
+  :custom (flycheck-elixir-credo-strict t))
 
 (use-package flycheck-mix
   :ensure t
@@ -65,7 +68,7 @@
   :ensure t
   :config (helm-mode 1)
           (helm-autoresize-mode 1)
-          (setq helm-split-window-inside-p 1)
+  :custom (helm-split-window-inside-p 1)
   :bind   (("M-x" . helm-M-x)
             ("M-y" . helm-show-kill-ring)
             ("C-x b" . helm-mini)
@@ -75,29 +78,36 @@
 (use-package jedi
   :ensure t
   :hook   (python-mode . 'jedi:setup)
-  :config (setq jedi:complete-on-dot t))
+  :custom (jedi:complete-on-dot t))
 
 (use-package linum
   :config (global-linum-mode t)
-          (setq linum-format "%3d| "))
+  :custom (linum-format "%3d| "))
 
 (use-package rainbow-delimiters
   :ensure t
   :hook   (prog-mode . rainbow-delimiters-mode))
 
 (use-package undo-tree
-  :ensure t
+  :ensure   t
   :diminish undo-tree-mode
-  :config (global-undo-tree-mode))
+  :config   (global-undo-tree-mode))
 
 (use-package whitespace
   :diminish global-whitespace-mode
-  :hook     ((c-mode .       (lambda () (setq whitespace-line-column 80)))
+  :config   (global-whitespace-mode)
+  :custom   (whitespace-style '(face lines-tail))
+  :hook     ((prog-mode .    (lambda () (setq show-trailing-whitespace 1)))
+              (c-mode .      (lambda () (setq whitespace-line-column 80)))
               (c++-mode .    (lambda () (setq whitespace-line-column 80)))
               (elixir-mode . (lambda () (setq whitespace-line-column 80)))
               (java-mode .   (lambda () (setq whitespace-line-column 100)))
               (python-mode . (lambda () (setq whitespace-line-column 79)))
               (rust-mode .   (lambda () (setq whitespace-line-column 99)))))
+
+(use-package windmove
+  :config (windmove-default-keybindings)
+  :custom (shift-select-mode nil))
 
 ;; language support
 (use-package cython-mode     :ensure t)
@@ -107,14 +117,12 @@
 (use-package rust-mode       :ensure t)
 (use-package yaml-mode       :ensure t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; low tech manual configuration
 
-;;; theme
+;;; ui stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; theme
 (load-theme 'indoors t)
-
-;;; ui stuff
-
 ;; don't show startup screen in gui mode
 (setq inhibit-startup-screen t)
 ;; show only column numbers along the bottom
@@ -195,14 +203,8 @@
 (global-set-key (kbd "<f5>") 'compile-go)
 (global-set-key (kbd "C-t") 'ansi-term)
 (global-set-key [mouse-8] 'previous-buffer)
-  (global-set-key [mouse-9] 'next-buffer)
-(setq shift-select-mode nil)
-(windmove-default-keybindings)
-(setq whitespace-style '(face lines-tail))
-(global-whitespace-mode)
+(global-set-key [mouse-9] 'next-buffer)
 (delete-selection-mode)
-(global-undo-tree-mode)
-(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace 1)))
 
 ;; c/++ stuff
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
@@ -226,9 +228,6 @@ http://stackoverflow.com/a/23553882"
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; this should probably be cleaned up to not use mode hooks to manipulate company-backends
 
-(add-hook 'after-init-hook 'global-company-mode)
-(setq company-idle-delay 0)
-;;  (company-quickhelp-mode 1)
 (add-hook 'darwin-system-type-hook
   (lambda ()
     (setq company-c-headers-path-system
@@ -241,7 +240,7 @@ http://stackoverflow.com/a/23553882"
       '("/usr/include/"
          "/usr/lib/gcc/x86_64-linux-gnu/4.9.3/include"
          "/usr/include/c++/4.9.3"))))
-(setq company-tooltip-align-annotations t)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; init.el ends here
 (custom-set-variables
