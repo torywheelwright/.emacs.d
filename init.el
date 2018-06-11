@@ -33,10 +33,15 @@
   :config (bracketed-paste-enable))
 
 (use-package company
+  :diminish company-mode
+  :ensure t)
+
+(use-package diminish
   :ensure t)
 
 (use-package editorconfig
   :ensure t
+  :diminish editorconfig-mode
   :config (editorconfig-mode 1))
 
 (use-package flycheck
@@ -82,7 +87,17 @@
 
 (use-package undo-tree
   :ensure t
+  :diminish undo-tree-mode
   :config (global-undo-tree-mode))
+
+(use-package whitespace
+  :diminish global-whitespace-mode
+  :hook     ((c-mode .       (lambda () (setq whitespace-line-column 80)))
+              (c++-mode .    (lambda () (setq whitespace-line-column 80)))
+              (elixir-mode . (lambda () (setq whitespace-line-column 80)))
+              (java-mode .   (lambda () (setq whitespace-line-column 100)))
+              (python-mode . (lambda () (setq whitespace-line-column 79)))
+              (rust-mode .   (lambda () (setq whitespace-line-column 99)))))
 
 ;; language support
 (use-package cython-mode     :ensure t)
@@ -95,10 +110,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; low tech manual configuration
 
-;; theme
+;;; theme
 (load-theme 'indoors t)
 
-;; ui stuff
+;;; ui stuff
 
 ;; don't show startup screen in gui mode
 (setq inhibit-startup-screen t)
@@ -118,23 +133,6 @@
       (bury-buffer)
       (switch-to-buffer-other-frame server-buf))))
 (add-hook 'server-done-hook 'delete-frame)
-
-;; set max line lenghts for various languages
-(add-hook 'after-change-major-mode-hook
-	  '(lambda () (when (eq major-mode 'rust-mode)
-			(setq whitespace-line-column 99))))
-(add-hook 'after-change-major-mode-hook
-	  '(lambda () (when (eq major-mode 'c-mode)
-			(setq whitespace-line-column 80))))
-(add-hook 'after-change-major-mode-hook
-	  '(lambda () (when (eq major-mode 'c++-mode)
-			(setq whitespace-line-column 80))))
-(add-hook 'after-change-major-mode-hook
-	  '(lambda () (when (eq major-mode 'python-mode)
-			(setq whitespace-line-column 79))))
-(add-hook 'after-change-major-mode-hook
-	  '(lambda () (when (eq major-mode 'java-mode)
-(setq whitespace-line-column 100))))
 
 ;; editor stuff
 (editorconfig-mode 1)
@@ -246,3 +244,17 @@ http://stackoverflow.com/a/23553882"
 (setq company-tooltip-align-annotations t)
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (delight yaml-mode use-package undo-tree rust-mode rainbow-delimiters monokai-theme leuven-theme json-mode jedi helm flycheck-mix flycheck-cython elpy editorconfig dockerfile-mode cython-mode bracketed-paste auto-package-update alchemist))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
