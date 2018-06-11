@@ -1,33 +1,28 @@
-;;; package --- Summary: tory's emacs config
+;;; package --- Summary: tory wheelwright's emacs config
 ;;; Commentary:
 ;;; Code:
 
-(add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path "~/.emacs.d/lisp")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; use `package.el` to install `use-package`, which will then be used to ensure
-;; that everything else is installed.
+;; use `package` to install `use-package`, which will install everything else.
 
 (require 'package)
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives '("melpa"
-				 . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("marmalade"
-				 . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("gnu"
-				 . "http://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile (require 'use-package))
-;;(require 'diminish)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package configurations
 
-(use-package auto-package-update ; auto updates packages
+(use-package alchemist
+  :ensure t)
+
+(use-package auto-package-update
   :ensure t
   :config (setq auto-package-update-delete-old-versions t)
           (setq auto-package-update-hide-results t)
@@ -40,27 +35,26 @@
 (use-package company
   :ensure t)
 
-(use-package cython-mode
-  :ensure t)
-
-(use-package dockerfile-mode
-  :ensure t)
-
 (use-package editorconfig
   :ensure t
   :config (editorconfig-mode 1))
 
-(use-package elixir-mode
-  :ensure t)
-
 (use-package flycheck
   :ensure t
-  :config (setq flycheck-clang-language-standard "c++14")
+  :config (setq flycheck-clang-args (quote ("-std=c++17")))
           (setq flycheck-python-pylint-executable "python3")
           (setq flycheck-python-flake8-executable "python3")
           (setq flycheck-checker 'python-flake8)
           (flycheck-add-next-checker 'python-flake8 'python-pylint)
           (global-flycheck-mode))
+
+(use-package flycheck-credo
+  :init   (add-hook 'flycheck-mode-hook #'flycheck-credo-setup)
+  :config (setq flycheck-elixir-credo-strict t))
+
+(use-package flycheck-mix
+  :ensure t
+  :commands (flycheck-mix-setup))
 
 (use-package helm
   :ensure t
@@ -68,38 +62,37 @@
           (helm-autoresize-mode 1)
           (setq helm-split-window-inside-p 1)
   :bind   (("M-x" . helm-M-x)
-	   ("M-y" . helm-show-kill-ring)
-	   ("C-x b" . helm-mini)
-	   ("C-x C-f" . helm-find-files)
-	   ("C-x f" . helm-find-files)))
+            ("M-y" . helm-show-kill-ring)
+            ("C-x b" . helm-mini)
+            ("C-x C-f" . helm-find-files)
+            ("C-x f" . helm-find-files)))
 
 (use-package jedi
   :ensure t
   :hook   (python-mode . 'jedi:setup)
   :config (setq jedi:complete-on-dot t))
 
-(use-package json-mode
-  :ensure t)
 
 (use-package rainbow-delimiters
   :ensure t
   :hook   (prog-mode . rainbow-delimiters-mode))
 
-(use-package rust-mode
-  :ensure t)
-
 (use-package undo-tree
   :ensure t
   :config (global-undo-tree-mode))
 
-(use-package yaml-mode
-  :ensure t)
+;; language support
+(use-package cython-mode     :ensure t)
+(use-package dockerfile-mode :ensure t)
+(use-package json-mode       :ensure t)
+(use-package elixir-mode     :ensure t)
+(use-package rust-mode       :ensure t)
+(use-package yaml-mode       :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; low tech manual configuration
 
 ;; theme
-(add-to-list 'load-path "~/.emacs.d")
 (load-theme 'indoors t)
 
 ;; ui stuff
@@ -141,7 +134,7 @@
 			(setq whitespace-line-column 79))))
 (add-hook 'after-change-major-mode-hook
 	  '(lambda () (when (eq major-mode 'java-mode)
-			(setq whitespace-line-column 100))))
+(setq whitespace-line-column 100))))
 
 ;; editor stuff
 (editorconfig-mode 1)
@@ -253,17 +246,3 @@ http://stackoverflow.com/a/23553882"
 (setq company-tooltip-align-annotations t)
 
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (elixir-mode auto-package-update yaml-mode use-package undo-tree rust-mode rainbow-delimiters monokai-theme leuven-theme json-mode jedi helm flycheck elpy editorconfig dockerfile-mode bracketed-paste))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
