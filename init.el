@@ -57,13 +57,22 @@
 (use-package company-c-headers
   :ensure t)
 
+(use-package cython-mode
+  :ensure t)
+
 (use-package diminish
+  :ensure t)
+
+(use-package dockerfile-mode
   :ensure t)
 
 (use-package editorconfig
   :ensure t
   :diminish editorconfig-mode
   :config (editorconfig-mode 1))
+
+(use-package elixir-mode
+  :ensure t)
 
 (use-package flycheck
   :ensure t
@@ -98,13 +107,27 @@
   :hook   (python-mode . 'jedi:setup)
   :custom (jedi:complete-on-dot t))
 
+(use-package json-mode
+  :ensure t)
+
 (use-package linum
   :config (global-linum-mode t)
   :custom (linum-format "%3d| "))
 
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode     (("README\\.md\\'" . gfm-mode)
+             ("\\.md\\'" . markdown-mode)
+             ("\\.markdown\\'" . markdown-mode))
+  :init     (setq markdown-command "multimarkdown"))
+
 (use-package rainbow-delimiters
   :ensure t
   :hook   (prog-mode . rainbow-delimiters-mode))
+
+(use-package rust-mode
+  :ensure t)
 
 (use-package undo-tree
   :ensure   t
@@ -127,13 +150,8 @@
   :config (windmove-default-keybindings)
   :custom (shift-select-mode nil))
 
-;; non-bundled language support
-(use-package cython-mode     :ensure t)
-(use-package dockerfile-mode :ensure t)
-(use-package elixir-mode     :ensure t)
-(use-package json-mode       :ensure t)
-(use-package rust-mode       :ensure t)
-(use-package yaml-mode       :ensure t)
+(use-package yaml-mode
+  :ensure t)
 
 ;;; ui stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; theme
@@ -241,3 +259,35 @@
 (delete-selection-mode)
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-c-headers-path-system
+   (quote
+    ("/bin/bash: /Users/tory/.emacs.d/system-headers-paths.sh: Permission denied")))
+ '(company-c-headers-path-user
+   (quote
+    ("/Users/tory/.emacs.d/user-headers-paths.sh: line 2: ./c-user-headers-path.sh: No such file or directory" "/Users/tory/.emacs.d/user-headers-paths.sh: line 3: ./c++-user-headers-path.sh: No such file or directory")))
+ '(company-idle-delay 0)
+ '(company-tooltip-align-annotations t)
+ '(flycheck-checker (quote python-flake8) t)
+ '(flycheck-clang-args (quote ("-std=c++17")))
+ '(flycheck-elixir-credo-strict t)
+ '(flycheck-python-flake8-executable "python3")
+ '(flycheck-python-pylint-executable "python3")
+ '(helm-split-window-inside-p 1 t)
+ '(jedi:complete-on-dot t t)
+ '(linum-format "%3d| ")
+ '(package-selected-packages
+   (quote
+    (markdown-mode yaml-mode use-package undo-tree rust-mode rainbow-delimiters json-mode jedi helm flycheck-mix editorconfig dockerfile-mode diminish cython-mode company-c-headers bracketed-paste auto-package-update alchemist)))
+ '(shift-select-mode nil)
+ '(whitespace-style (quote (face lines-tail))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
