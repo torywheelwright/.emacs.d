@@ -138,13 +138,14 @@
   :diminish global-whitespace-mode
   :config   (global-whitespace-mode)
   :custom   (whitespace-style '(face lines-tail))
-  :hook     ((prog-mode .    (lambda () (setq show-trailing-whitespace 1)))
-              (c-mode .      (lambda () (setq whitespace-line-column 80)))
-              (c++-mode .    (lambda () (setq whitespace-line-column 80)))
-              (elixir-mode . (lambda () (setq whitespace-line-column 80)))
-              (java-mode .   (lambda () (setq whitespace-line-column 100)))
-              (python-mode . (lambda () (setq whitespace-line-column 79)))
-              (rust-mode .   (lambda () (setq whitespace-line-column 99)))))
+  :hook     ((prog-mode .        (lambda () (setq show-trailing-whitespace 1)))
+              (c-mode .          (lambda () (setq whitespace-line-column 80)))
+              (c++-mode .        (lambda () (setq whitespace-line-column 80)))
+              (elixir-mode .     (lambda () (setq whitespace-line-column 80)))
+              (emacs-lisp-mode . (lambda () (setq whitespace-line-column 80)))
+              (java-mode .       (lambda () (setq whitespace-line-column 100)))
+              (python-mode .     (lambda () (setq whitespace-line-column 79)))
+              (rust-mode .       (lambda () (setq whitespace-line-column 99)))))
 
 (use-package windmove
   :config (windmove-default-keybindings)
@@ -156,17 +157,18 @@
 ;;; ui stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; theme
 (load-theme 'indoors t)
-;; don't show startup screen in gui mode
-(setq inhibit-startup-screen t)
 ;; show column numbers, but no row numbers
 (column-number-mode 1)
 (line-number-mode 0)
 ;; make "yes/no" questions respond to "y/n"
 (defalias 'yes-or-no-p 'y-or-n-p)
-;; hide tool bar
-(if (functionp 'tool-bar-mode) (tool-bar-mode 0))
-;; hide menu bar
-(menu-bar-mode 0)
+;; hide splash screen, menu bar, tool bar, scroll bar
+(setq inhibit-splash-screen t)
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+;; make scratch buffer start up empty
+(setq initial-scratch-message "")
 ;; create a new frame for every emacsclient, and clean them up on disconnect
 ;; https://www.emacswiki.org/emacs/EmacsClient#toc14
 (add-hook 'server-switch-hook
@@ -176,6 +178,11 @@
       (switch-to-buffer-other-frame server-buf))))
 (add-hook 'server-done-hook 'delete-frame)
 (add-hook 'server-done-hook (lambda nil (kill-buffer nil)))
+;; auto revert a file if modified outside emacs
+(global-auto-revert-mode t)
+;; make files that start with a shebang executable
+(add-hook 'after-save-hook
+  'executable-make-buffer-file-executable-if-script-p)
 
 ;;; improve some of the standard keybindings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -258,36 +265,10 @@
 ;; if a region is selected when delete is pressed, it gets deleted
 (delete-selection-mode)
 
+;;; other stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; don't litter my hd with temp files
+(setq backup-directory-alist `((".*" . "~/.emacs.d/tmp"))
+  auto-save-file-name-transforms `((".*" , "~/.emacs.d/tmp" t)))
+
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-c-headers-path-system
-   (quote
-    ("/bin/bash: /Users/tory/.emacs.d/system-headers-paths.sh: Permission denied")))
- '(company-c-headers-path-user
-   (quote
-    ("/Users/tory/.emacs.d/user-headers-paths.sh: line 2: ./c-user-headers-path.sh: No such file or directory" "/Users/tory/.emacs.d/user-headers-paths.sh: line 3: ./c++-user-headers-path.sh: No such file or directory")))
- '(company-idle-delay 0)
- '(company-tooltip-align-annotations t)
- '(flycheck-checker (quote python-flake8) t)
- '(flycheck-clang-args (quote ("-std=c++17")))
- '(flycheck-elixir-credo-strict t)
- '(flycheck-python-flake8-executable "python3")
- '(flycheck-python-pylint-executable "python3")
- '(helm-split-window-inside-p 1 t)
- '(jedi:complete-on-dot t t)
- '(linum-format "%3d| ")
- '(package-selected-packages
-   (quote
-    (markdown-mode yaml-mode use-package undo-tree rust-mode rainbow-delimiters json-mode jedi helm flycheck-mix editorconfig dockerfile-mode diminish cython-mode company-c-headers bracketed-paste auto-package-update alchemist)))
- '(shift-select-mode nil)
- '(whitespace-style (quote (face lines-tail))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
