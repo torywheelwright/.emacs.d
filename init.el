@@ -71,8 +71,16 @@
   :diminish editorconfig-mode
   :config (editorconfig-mode 1))
 
+(use-package eldoc
+  :diminish eldoc-mode)
+
 (use-package elixir-mode
   :ensure t)
+
+(use-package exec-path-from-shell
+  :ensure t
+  :init   (when (memq window-system '(mac ns x))
+            (exec-path-from-shell-initialize)))
 
 (use-package flycheck
   :ensure t
@@ -81,7 +89,13 @@
   :custom ((flycheck-clang-args (quote ("-std=c++17")))
             (flycheck-python-pylint-executable "python3")
             (flycheck-python-flake8-executable "python3")
-            (flycheck-checker 'python-flake8)))
+            (flycheck-checker 'python-flake8)
+            (flycheck-javascript-eslint-executable
+              "/opt/nodejs-8.9.4/bin/eslint")
+            (flycheck-javascript-eslint-args
+              (quote
+                ("--rulesdir"
+                  "/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules")))))
 
 (use-package flycheck-credo
   :init   (add-hook 'flycheck-mode-hook #'flycheck-credo-setup)
@@ -91,16 +105,22 @@
   :ensure t
   :commands (flycheck-mix-setup))
 
-(use-package helm
+(use-package ggtags
   :ensure t
-  :config (helm-mode 1)
-          (helm-autoresize-mode 1)
-  :custom (helm-split-window-inside-p 1)
-  :bind   (("M-x" . helm-M-x)
-            ("M-y" . helm-show-kill-ring)
-            ("C-x b" . helm-mini)
-            ("C-x C-f" . helm-find-files)
-            ("C-x f" . helm-find-files)))
+  :hook (('c-mode-common . (lambda () (when (derived-mode-p 'c-mode 'c++-mode 'java-mode) (ggtags-mode 1))))
+          (('elixir-mode . (ggtags-mode 1)))))
+
+(use-package helm
+  :ensure   t
+  :diminish helm-mode
+  :config   (helm-mode 1)
+            (helm-autoresize-mode 1)
+  :custom   (helm-split-window-inside-p 1)
+  :bind     (("M-x" .     helm-M-x)
+             ("M-y" .     helm-show-kill-ring)
+             ("C-x b" .   helm-mini)
+             ("C-x C-f" . helm-find-files)
+             ("C-x f" .   helm-find-files)))
 
 (use-package jedi
   :ensure t
@@ -141,7 +161,7 @@
   :hook     ((prog-mode .        (lambda () (setq show-trailing-whitespace 1)))
               (c-mode .          (lambda () (setq whitespace-line-column 80)))
               (c++-mode .        (lambda () (setq whitespace-line-column 80)))
-              (elixir-mode .     (lambda () (setq whitespace-line-column 80)))
+              (elixir-mode .     (lambda () (setq whitespace-line-column 98)))
               (emacs-lisp-mode . (lambda () (setq whitespace-line-column 80)))
               (java-mode .       (lambda () (setq whitespace-line-column 100)))
               (python-mode .     (lambda () (setq whitespace-line-column 79)))
