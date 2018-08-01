@@ -19,6 +19,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package configurations
 
+(use-package add-node-modules-path
+  :hook (js-mode #'add-node-modules-path))
+;; (use-package add-node-modules-path
+;;   :config (eval-after-load 'js-mode
+;;             '(add-hook 'js-mode-hook #'add-node-modules-path)))
+
+
 (use-package alchemist
   :ensure t)
 
@@ -86,16 +93,13 @@
   :ensure t
   :config (flycheck-add-next-checker 'python-flake8 'python-pylint)
           (global-flycheck-mode)
-  :custom ((flycheck-clang-args (quote ("-std=c++17")))
-            (flycheck-python-pylint-executable "python3")
-            (flycheck-python-flake8-executable "python3")
-            (flycheck-checker 'python-flake8)
-            (flycheck-javascript-eslint-executable
-              "/opt/nodejs-8.9.4/bin/eslint")
-            (flycheck-javascript-eslint-args
-              (quote
-                ("--rulesdir"
-                  "/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules")))))
+  :custom (;;; TODO: can worry about this stuff later when I'm working in python/c++ again
+            ;;(flycheck-clang-args (quote ("-std=c++17")))
+            ;;(flycheck-python-pylint-executable "python3")
+            ;;(flycheck-python-flake8-executable "python3")
+            ;;(flycheck-checker 'python-flake8)
+            (flycheck-javascript-eslint-rules-directories
+              '("/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules"))))
 
 (use-package flycheck-credo
   :init   (add-hook 'flycheck-mode-hook #'flycheck-credo-setup)
