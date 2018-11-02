@@ -101,9 +101,14 @@
             (flycheck-javascript-eslint-rules-directories
               '("/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules"))))
 
-(use-package flycheck-credo
-  :init   (add-hook 'flycheck-mode-hook #'flycheck-credo-setup)
-  :custom (flycheck-elixir-credo-strict t))
+;; (use-package flycheck-credo
+;;   :custom (flycheck-elixir-credo-strict t)
+;;   :hook   (add-hook flycheck-mode . 'flycheck-credo-setup))
+
+;; Constantly hanging my computer. I think this backend may just be shit.
+;; (use-package flycheck-flow
+;;   :config (flycheck-add-next-checker 'javascript-eslint 'javascript-flow)
+;;   :ensure t)
 
 (use-package flycheck-mix
   :ensure t
@@ -153,23 +158,27 @@
 (use-package rust-mode
   :ensure t)
 
+(use-package typescript-mode
+  :ensure t)
+
 (use-package undo-tree
   :ensure   t
   :diminish undo-tree-mode
   :config   (global-undo-tree-mode))
 
-(use-package whitespace
-  :diminish global-whitespace-mode
-  :config   (global-whitespace-mode)
-  :custom   (whitespace-style '(face lines-tail))
-  :hook     ((prog-mode .        (lambda () (setq show-trailing-whitespace 1)))
-              (c-mode .          (lambda () (setq whitespace-line-column 80)))
-              (c++-mode .        (lambda () (setq whitespace-line-column 80)))
-              (elixir-mode .     (lambda () (setq whitespace-line-column 98)))
-              (emacs-lisp-mode . (lambda () (setq whitespace-line-column 80)))
-              (java-mode .       (lambda () (setq whitespace-line-column 100)))
-              (python-mode .     (lambda () (setq whitespace-line-column 79)))
-              (rust-mode .       (lambda () (setq whitespace-line-column 99)))))
+;; (use-package whitespace
+;;   :diminish global-whitespace-mode
+;;   :config   (global-whitespace-mode)
+;;   :custom   (whitespace-style '(face lines-tail))
+;;   :hook     ((prog-mode .        (lambda () (setq show-trailing-whitespace 1)))
+;;               (c-mode .          (lambda () (setq whitespace-line-column 80)))
+;;               (c++-mode .        (lambda () (setq whitespace-line-column 80)))
+;;               (elixir-mode .     (lambda () (setq whitespace-line-column 98)))
+;;               (emacs-lisp-mode . (lambda () (setq whitespace-line-column 80)))
+;;               (java-mode .       (lambda () (setq whitespace-line-column 100)))
+;;               (javascript-mode . (lambda () (setq whitespace-line-column 100)))
+;;               (python-mode .     (lambda () (setq whitespace-line-column 79)))
+;;               (rust-mode .       (lambda () (setq whitespace-line-column 99)))))
 
 (use-package windmove
   :config (windmove-default-keybindings)
