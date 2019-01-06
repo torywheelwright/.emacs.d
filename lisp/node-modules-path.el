@@ -1,12 +1,17 @@
-;;; node-modules-path.el --- Make `node_modules\.bin` available in `exec-path`. -*- lexical-binding: t; -*-
+;;; node-modules-path.el --- Update `exec-path` so that node packages can be found. -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;;
 ;;; When working in javascript, you typically want to use the local
 ;;; versions of tools like eslint, installed in a `node_modules/.bin` folder
 ;;; somewhere up the directory hierarchy from the file that the buffer in
-;;; question is visiting. This package provides functions for prepending to
-;;; the path each `node_modules/.bin` (nearest first), and for clearing these
-;;; entries.
+;;; question is visiting. Enable this functionality by adding something like
+;;; this to your emacs config:
+;;;
+;;; ```
+;;; (require 'node-modules-path)
+;;; (add-hook 'find-file-hook 'node-modules-path)
+;;; ```
+;;;
 ;;; Code:
 
 (defvar node-modules-path--original-exec-path nil)
