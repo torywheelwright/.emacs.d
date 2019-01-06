@@ -101,6 +101,7 @@
 ;;   :custom (flycheck-elixir-credo-strict t)
 ;;   :hook   (add-hook flycheck-mode . 'flycheck-credo-setup))
 
+;; I'm highly suspicious that this checker was hanging emacs. Keep an eye on this.
 (use-package flycheck-flow
   :config (flycheck-add-next-checker 'javascript-eslint 'javascript-flow)
   :ensure t)
