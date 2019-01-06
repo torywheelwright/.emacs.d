@@ -19,13 +19,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; package configurations
 
-(use-package add-node-modules-path
-  :hook (js-mode #'add-node-modules-path))
-;; (use-package add-node-modules-path
-;;   :config (eval-after-load 'js-mode
-;;             '(add-hook 'js-mode-hook #'add-node-modules-path)))
-
-
 (use-package alchemist
   :ensure t)
 
@@ -62,6 +55,9 @@
                   t))))
 
 (use-package company-c-headers
+  :ensure t)
+
+(use-package csharp-mode
   :ensure t)
 
 (use-package cython-mode
@@ -105,10 +101,9 @@
 ;;   :custom (flycheck-elixir-credo-strict t)
 ;;   :hook   (add-hook flycheck-mode . 'flycheck-credo-setup))
 
-;; Constantly hanging my computer. I think this backend may just be shit.
-;; (use-package flycheck-flow
-;;   :config (flycheck-add-next-checker 'javascript-eslint 'javascript-flow)
-;;   :ensure t)
+(use-package flycheck-flow
+  :config (flycheck-add-next-checker 'javascript-eslint 'javascript-flow)
+  :ensure t)
 
 (use-package flycheck-mix
   :ensure t
@@ -118,6 +113,9 @@
   :ensure t
   :hook (('c-mode-common . (lambda () (when (derived-mode-p 'c-mode 'c++-mode 'java-mode) (ggtags-mode 1))))
           (('elixir-mode . (ggtags-mode 1)))))
+
+(use-package go-mode
+  :ensure t)
 
 (use-package helm
   :ensure   t
@@ -150,6 +148,13 @@
              ("\\.md\\'" . markdown-mode)
              ("\\.markdown\\'" . markdown-mode))
   :init     (setq markdown-command "multimarkdown"))
+
+(use-package monokai-theme
+  :ensure t
+  :init (load-theme 'monokai t))
+
+(use-package node-modules-path
+  :hook (find-file . node-modules-path))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -188,8 +193,7 @@
   :ensure t)
 
 ;;; ui stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; theme
-(load-theme 'indoors t)
+;; (load-theme 'indoors t)
 ;; show column numbers, but no row numbers
 (column-number-mode 1)
 (line-number-mode 0)
@@ -303,5 +307,36 @@
 ;; don't litter my hd with temp files
 (setq backup-directory-alist `((".*" . "~/.emacs.d/tmp"))
   auto-save-file-name-transforms `((".*" , "~/.emacs.d/tmp" t)))
-
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+    '(company-c-headers-path-system
+         (quote
+             ("/bin/bash: /Users/tory/.emacs.d/system-headers-paths.sh: Permission denied")))
+ '(company-c-headers-path-user nil)
+ '(company-idle-delay 0)
+ '(company-tooltip-align-annotations t)
+ '(editorconfig-mode t)
+    '(flycheck-eslint-rules-directories
+         (quote
+             ("/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules")))
+    '(flycheck-javascript-eslint-rules-directories
+         (quote
+             ("/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules")) t)
+ '(flycheck-sh-shellcheck-executable "/usr/local/bin/shellcheck")
+ '(helm-split-window-inside-p 1)
+ '(jedi:complete-on-dot t t)
+ '(linum-format "%3d| ")
+    '(package-selected-packages
+         (quote
+             (node-modules-path go-mode monokai-theme yaml-mode use-package undo-tree typescript-mode rust-mode rainbow-delimiters markdown-mode json-mode jedi helm ggtags flycheck-mix flycheck-flow exec-path-from-shell editorconfig dockerfile-mode diminish cython-mode company-c-headers bracketed-paste auto-package-update alchemist)))
+ '(shift-select-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
