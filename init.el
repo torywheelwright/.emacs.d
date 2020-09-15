@@ -3,6 +3,7 @@
 ;;; Code:
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
+(setq explicit-shell-file-name "/bin/bash")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; use `package` to install `use-package`, which will install everything else
@@ -27,6 +28,12 @@
   :config (setq auto-package-update-delete-old-versions t)
           (setq auto-package-update-hide-results t)
           (auto-package-update-maybe))
+
+(use-package bison-mode
+  :ensure t)
+
+(use-package bitbake
+  :ensure t)
 
 (use-package bracketed-paste
   :ensure t
@@ -80,10 +87,15 @@
 (use-package elixir-mode
   :ensure t)
 
+(use-package edts
+  :ensure t)
+
 (use-package exec-path-from-shell
   :ensure t
   :init   (when (memq window-system '(mac ns x))
             (exec-path-from-shell-initialize)))
+
+(use-package flex)
 
 (use-package flycheck
   :ensure t
@@ -97,14 +109,15 @@
             (flycheck-javascript-eslint-rules-directories
               '("/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules"))))
 
-;; (use-package flycheck-credo
-;;   :custom (flycheck-elixir-credo-strict t)
-;;   :hook   (add-hook flycheck-mode . 'flycheck-credo-setup))
+(use-package flycheck-credo
+  :ensure t
+  :custom (flycheck-elixir-credo-strict t)
+  :hook   ('flycheck-mode . 'flycheck-credo-setup))
 
 ;; I'm highly suspicious that this checker was hanging emacs. Keep an eye on this.
-(use-package flycheck-flow
-  :config (flycheck-add-next-checker 'javascript-eslint 'javascript-flow)
-  :ensure t)
+;; (use-package flycheck-flow
+;;   :config (flycheck-add-next-checker 'javascript-eslint 'javascript-flow)
+;;   :ensure t)
 
 (use-package flycheck-mix
   :ensure t
@@ -142,6 +155,9 @@
   :config (global-linum-mode t)
   :custom (linum-format "%3d| "))
 
+(use-package magit
+  :ensure t)
+
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
@@ -154,8 +170,17 @@
   :ensure t
   :init (load-theme 'monokai t))
 
-(use-package node-modules-path
-  :hook (find-file . node-modules-path))
+(use-package nix-mode
+  :ensure t)
+
+;; (use-package node-modules-path
+;;   :hook (find-file . node-modules-path))
+
+(use-package org
+  :ensure t)
+
+(use-package protobuf-mode
+  :ensure t)
 
 (use-package rainbow-delimiters
   :ensure t
@@ -226,7 +251,7 @@
 
 ;;; improve some of the standard keybindings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; make C-a move alternately, to the beginning or end of leading whitespace
+;; make C-a move alternately to the beginning or end of leading whitespace
 (defun smarter-move-beginning-of-line (arg)
   (interactive "^p")
   (setq arg (or arg 1))
@@ -306,10 +331,13 @@
 (delete-selection-mode)
 
 ;;; other stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
+;; without this docker bind mounts break
+(setq backup-by-copying t)
 ;; don't litter my hd with temp files
 (setq backup-directory-alist `((".*" . "~/.emacs.d/tmp"))
   auto-save-file-name-transforms `((".*" , "~/.emacs.d/tmp" t)))
+;; why would i want a tiny small kill ring?
+(setq kill-ring-max 1000)
 ;;; init.el ends here
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -317,26 +345,21 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(company-c-headers-path-system
-   (quote
-    ("/bin/bash: /Users/tory/.emacs.d/system-headers-paths.sh: Permission denied")))
+   '("/bin/bash: /Users/tory/.emacs.d/system-headers-paths.sh: Permission denied"))
  '(company-c-headers-path-user nil)
  '(company-idle-delay 0)
  '(company-tooltip-align-annotations t)
  '(editorconfig-mode t)
- '(flycheck-eslint-rules-directories
-   (quote
-    ("/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules")))
- '(flycheck-javascript-eslint-rules-directories
-   (quote
-    ("/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules")) t)
+ '(flycheck-elixir-credo-strict t)
+ '(flycheck-eslint-rules-directories '("/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules"))
+ '(flycheck-javascript-eslint-rules-directories '("/Users/tory/tulip/tulip/tools/eslint-rules/lib/rules") t)
  '(flycheck-javascript-flow-args nil)
  '(flycheck-sh-shellcheck-executable "/usr/local/bin/shellcheck")
- '(helm-split-window-inside-p 1)
+ '(helm-split-window-inside-p 1 t)
  '(jedi:complete-on-dot t t)
  '(linum-format "%3d| ")
  '(package-selected-packages
-   (quote
-    (bitbake node-modules-path go-mode monokai-theme yaml-mode use-package undo-tree typescript-mode rust-mode rainbow-delimiters markdown-mode json-mode jedi helm ggtags flycheck-mix flycheck-flow exec-path-from-shell editorconfig dockerfile-mode diminish cython-mode company-c-headers bracketed-paste auto-package-update alchemist)))
+   '(nix-mode bison-mode protobuf-mode edts magit flycheck-credo bb-mode bitbake node-modules-path go-mode monokai-theme yaml-mode use-package undo-tree typescript-mode rust-mode rainbow-delimiters markdown-mode json-mode jedi helm ggtags flycheck-mix flycheck-flow exec-path-from-shell editorconfig dockerfile-mode diminish cython-mode company-c-headers bracketed-paste auto-package-update alchemist))
  '(shift-select-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -344,3 +367,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'downcase-region 'disabled nil)
